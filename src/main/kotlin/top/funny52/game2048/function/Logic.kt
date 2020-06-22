@@ -144,7 +144,29 @@ fun Game.resetGame() {
     generateCell()
     generateCell()
     this.grade = 0
+    this.moveHistory = mutableListOf()
     this.repaint()
+}
+
+/*
+ *  Fallback the moveHistory
+ */
+fun Game.fallBack() {
+    if (this.moveHistory.size == 0) return
+    this.block = this.moveHistory.let { it[it.size - 1] }
+    this.moveHistory.apply { this.removeAt(this.size - 1) }
+    this.repaint()
+}
+
+/*
+ *  Recording the moveHistory
+ */
+fun Game.goAhead() {
+    if (this.moveHistory.size == 5) {
+        this.moveHistory.apply { this.removeAt(0); this.add(block.toMutableList()) }
+    } else {
+        this.moveHistory.add(this.block.toMutableList())
+    }
 }
 
 /*

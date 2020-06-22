@@ -23,6 +23,8 @@ class Game : JPanel() {
         mutableListOf(0, 0, 0, 0),
         mutableListOf(0, 0, 0, 0)
     )
+    // game move history
+    var moveHistory =  mutableListOf<MutableList<MutableList<Int>>>()
 
     companion object {
         // This is Challenger Name
@@ -83,6 +85,16 @@ class Game : JPanel() {
                 resetGame()
             }
         })
+        this.add(RoundButton("Back", 8).apply {
+            this.isFocusable = false
+            this.background = Color(0x8A7764)
+            this.foreground = Color(0xE5DCD3)
+            this.isBorderPainted = false
+            this.setBounds(285, 100, 75, 60)
+            this.addActionListener {
+                fallBack()
+            }
+        })
 
         this.add(this.scoreReact.apply {
             this.setBounds(308, 10, 80, 75)
@@ -104,18 +116,21 @@ class Game : JPanel() {
                         KeyEvent.VK_ESCAPE
                     )
                 ) {
-
+                    if (hasEmptyCell()) {
+                        goAhead()
+                        println(moveHistory)
+                    }
                     if (!(hasFail() || hasWin())) {
                         var tempGrade = 0
                         when (e.keyCode) {
-                            KeyEvent.VK_LEFT -> tempGrade +=left()
+                            KeyEvent.VK_LEFT -> tempGrade += left()
                             KeyEvent.VK_RIGHT -> tempGrade += right()
                             KeyEvent.VK_UP -> tempGrade += up()
                             KeyEvent.VK_DOWN -> tempGrade += down()
                             KeyEvent.VK_ESCAPE -> resetGame()
                         }
                         if (hasEmptyCell()) grade += tempGrade
-                        // refresh
+                        // refresh UI
                         repaint()
                         if (!hasFail()) {
                             GlobalScope.launch {
