@@ -24,7 +24,7 @@ class Game : JPanel() {
         mutableListOf(0, 0, 0, 0)
     )
     // game move history
-    var moveHistory =  mutableListOf<MutableList<MutableList<Int>>>()
+    var moveHistory =  mutableListOf<Pair<MutableList<MutableList<Int>>, Int>>()
 
     companion object {
         // This is Challenger Name

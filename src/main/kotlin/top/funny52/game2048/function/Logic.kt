@@ -153,7 +153,8 @@ fun Game.resetGame() {
  */
 fun Game.fallBack() {
     if (this.moveHistory.size == 0) return
-    this.block = this.moveHistory.let { it[it.size - 1] }
+    this.block = this.moveHistory.let { it[it.size - 1].first }
+    this.grade = this.moveHistory.let { it[it.size - 1].second }
     this.moveHistory.apply { this.removeAt(this.size - 1) }
     this.repaint()
 }
@@ -163,9 +164,9 @@ fun Game.fallBack() {
  */
 fun Game.goAhead() {
     if (this.moveHistory.size == 5) {
-        this.moveHistory.apply { this.removeAt(0); this.add(block.toMutableList()) }
+        this.moveHistory.apply { this.removeAt(0); this.add(block.toMutableList() to grade) }
     } else {
-        this.moveHistory.add(this.block.toMutableList())
+        this.moveHistory.add(this.block.toMutableList() to this.grade)
     }
 }
 
