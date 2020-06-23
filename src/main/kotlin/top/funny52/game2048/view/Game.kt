@@ -23,12 +23,27 @@ class Game : JPanel() {
         mutableListOf(0, 0, 0, 0),
         mutableListOf(0, 0, 0, 0)
     )
+
     // game move history
-    var moveHistory =  mutableListOf<Pair<MutableList<MutableList<Int>>, Int>>()
+    var moveHistory = mutableListOf<Pair<MutableList<MutableList<Int>>, Int>>()
+
+    var battleMode = false
+
+    var fallBackButton = RoundButton("Back", 8).apply {
+        this.isFocusable = false
+        this.background = Color(0x8A7764)
+        this.foreground = Color(0xE5DCD3)
+        this.isBorderPainted = false
+        this.setBounds(285, 100, 75, 60)
+        this.addActionListener {
+            fallBack()
+        }
+    }
 
     companion object {
         // This is Challenger Name
         var Name: String? = null
+        lateinit var Request: Request
     }
 
     // now grade
@@ -59,8 +74,6 @@ class Game : JPanel() {
         this.setSize(513, 708)
         this.isFocusable = true
 
-
-
         this.add(JLabel("", JLabel.CENTER).apply {
             this.text = "<html><div style='color:#736B63;font-size:48px;'><b>2048</b></div></html>"
             this.setBounds(10, 10, 160, 60)
@@ -82,19 +95,11 @@ class Game : JPanel() {
             this.isBorderPainted = false
             this.setBounds(368, 100, 140, 60)
             this.addActionListener {
+                if (battleMode) Request.reset()
                 resetGame()
             }
         })
-        this.add(RoundButton("Back", 8).apply {
-            this.isFocusable = false
-            this.background = Color(0x8A7764)
-            this.foreground = Color(0xE5DCD3)
-            this.isBorderPainted = false
-            this.setBounds(285, 100, 75, 60)
-            this.addActionListener {
-                fallBack()
-            }
-        })
+        this.add(fallBackButton)
 
         this.add(this.scoreReact.apply {
             this.setBounds(308, 10, 80, 75)

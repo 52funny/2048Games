@@ -3,7 +3,9 @@ package top.funny52.game2048.function
 import top.funny52.game2048.model.Colors
 import top.funny52.game2048.view.Game
 import java.awt.*
-
+/*
+ * Draw block and border
+ */
 fun Game.drawBlock(g: Graphics?, x: Int, y: Int) {
     val offsetX = offsetX(x)
     val offsetY = offsetY(y)
@@ -35,26 +37,56 @@ fun Game.drawBlock(g: Graphics?, x: Int, y: Int) {
     if (this.block[y][x] != 0) {
         g.drawString(s, offsetX + (107 - w)/ 2, offsetY + 107 - (107 - h)/ 2 -2)
     }
+    if (battleMode) {
+        when(Game.Request.send(300)) {
+            "200" -> drawWin(g)
+            "400" -> drawFail(g)
+        }
+    }
     if (hasFail() || hasWin()) {
-        g.setColor(Color(255, 255, 255, 20))
-        g.fillRect(0, 0, width, height)
-        g.setColor(Color(78, 139, 202))
-        g.setFont(Font("Monaco", Font.BOLD, 48))
         if (hasFail()) {
-            g.drawString("Game over!", this.width / 4, this.height / 2);
-            g.drawString("You lose!", this.width / 4 + 15 , this.height / 2 + 60);
+            drawFail(g)
+            if (battleMode) Game.Request.send(400)
         }
         if (hasWin()) {
-            g.drawString("You Win!", this.width /3 , this.height / 2)
-
+            drawWin(g)
+            if (battleMode) Game.Request.send(200)
         }
-        g.setFont(Font("Monaco", Font.PLAIN, 20))
-        g.setColor(Color(128, 128, 128, 128))
-        g.drawString("Press ESC to play again", 80, height - 40)
-        g.setFont(Font("Monaco", Font.PLAIN, 20))
-        g.drawString("Score: $grade", this.width / 3 + 30, this.height * 2 / 3)
     }
 
+}
+/*
+ * Draw win information
+ */
+fun Game.drawWin(g: Graphics2D) {
+    g.color = Color(255, 255, 255, 20)
+    g.fillRect(0, 0, width, height)
+    g.color = Color(78, 139, 202)
+    g.font = Font("Monaco", Font.BOLD, 48)
+    g.drawString("You Win!", this.width /3 , this.height / 2)
+    drawBottom(g)
+}
+/*
+ * Draw fail information
+ */
+fun Game.drawFail(g: Graphics2D) {
+    g.color = Color(255, 255, 255, 20)
+    g.fillRect(0, 0, width, height)
+    g.color = Color(78, 139, 202)
+    g.font = Font("Monaco", Font.BOLD, 48)
+    g.drawString("Game over!", this.width / 4, this.height / 2)
+    g.drawString("You lose!", this.width / 4 + 15 , this.height / 2 + 60)
+    drawBottom(g)
+}
+/*
+ * Draw bottom information
+ */
+fun Game.drawBottom(g: Graphics2D) {
+    g.font = Font("Monaco", Font.PLAIN, 20)
+    g.color = Color(128, 128, 128, 128)
+    g.drawString("Press ESC to play again", 80, height - 40)
+    g.font = Font("Monaco", Font.PLAIN, 20)
+    g.drawString("Score: $grade", this.width / 3 + 30, this.height * 2 / 3)
 }
 
 fun offsetX(x: Int): Int {
